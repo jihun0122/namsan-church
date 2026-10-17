@@ -13,7 +13,8 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:4px}
 button:disabled{opacity:.4;cursor:not-allowed}
 .outline{background:#f0f2e9;color:#36503d;border-color:var(--line)}
 .outline:hover:not(:disabled){background:#e2e9da}
-.wrap{max-width:1450px;margin:auto;padding:28px}
+.wrap{width:100%;min-height:100vh;min-height:100dvh;margin:0;padding:16px;display:flex;flex-direction:column}
+header{flex-shrink:0}
 header{position:relative;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;background:#fffef9;padding:28px;border:1px solid var(--line);border-top:5px solid var(--green);border-radius:16px;box-shadow:0 6px 24px #283c2010}
 .header-brand{display:flex;align-items:center;gap:28px;flex-wrap:wrap;min-width:0}
 .church-brand{display:flex;align-items:center;max-width:100%;background:transparent;flex-shrink:0}
@@ -21,9 +22,11 @@ header{position:relative;display:flex;justify-content:space-between;align-items:
 h1{font-family:'Apple SD Gothic Neo','Malgun Gothic',sans-serif;font-size:clamp(23px,3vw,39px);letter-spacing:-.045em;margin:8px 0 0;color:#164d34}
 .muted{color:var(--muted)}
 header .muted{font-size:14px;letter-spacing:.03em}
-.layout{display:grid;grid-template-columns:1fr;gap:20px;margin-top:24px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;margin-top:16px;flex:1}
+.layout>.panel{display:flex;flex-direction:column;min-width:0}
+.layout .progress,.layout .controls{flex-shrink:0}
 .panel{border-radius:16px;background:#fffef9;border:1px solid var(--line);padding:28px;box-shadow:0 8px 30px #283c2008}
-.question{min-height:390px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:28px;text-align:center;padding:24px 0}
+.question{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:28px;text-align:center;padding:24px 0}
 .tag{background:#e8f1e4;border:1px solid #ccddc6;border-radius:7px;padding:9px 16px;color:var(--green-dark);font-weight:750}
 .question h2{font-size:clamp(30px,3.7vw,54px);line-height:1.45;letter-spacing:-.035em;margin:10px 0;word-break:keep-all;max-width:1160px}
 .choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;gap:14px}
@@ -72,15 +75,21 @@ kbd{background:#e8eddf;padding:3px 6px;border-radius:4px}
 .reveal-confirm h2{font-size:clamp(26px,4vw,36px);margin:0 0 16px}
 .reveal-confirm p{color:#52624b;line-height:1.7;font-size:18px}
 .reveal-confirm .controls{justify-content:center}
-.start-screen{margin-top:24px;min-height:460px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:48px 24px;background:radial-gradient(ellipse at top,#edf4e3,transparent 70%),#fffef9}
+.start-screen{flex:1;margin-top:16px;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:48px 24px;background:radial-gradient(ellipse at top,#edf4e3,transparent 70%),#fffef9}
 .start-screen .tag{border-color:#dac77b;background:#fbf3d8;color:#755b15}
 .start-screen h2{font-size:clamp(38px,6vw,72px);line-height:1.3;letter-spacing:-.04em;color:#164d34;margin:28px 0 16px;word-break:keep-all}
 .start-screen p{font-size:clamp(18px,2.5vw,26px);color:#626b5b;margin:0 0 32px}
 .start-screen button{font-size:24px;min-width:220px;padding:18px 32px}
 .start-screen small{color:#697062;margin-top:20px}
 .start-screen[hidden],.layout[hidden]{display:none}
+@media(min-width:851px) and (max-height:850px){
+header{padding:16px 24px}.panel{padding:20px}.layout{margin-top:12px}
+.question{gap:16px;padding:16px 0}.question h2{font-size:clamp(28px,3vw,44px)}
+.choice{padding:14px}.controls{margin-top:12px}.participation{padding:12px}
+.participation strong{font-size:28px}.participation p{font-size:18px;margin-top:6px}
+}
 </style>
-</head><body><main class="wrap"><header><div class="header-brand"><div class="church-brand"><img class="church-logo" src="./ns_logo.png" alt="기독교대한감리회 남산교회"></div><div><div class="muted">20문항 · 창세기 12장 1–20절</div><h1>📖 창세기 12장 성경 퀴즈</h1></div></div><div><button class="outline" id="fullBtn">⛶ 전체 화면</button> <button class="outline" id="resetBtn">처음부터</button></div></header><section id="startScreen" class="panel start-screen"><span class="tag">남산교회 중고등부</span><h2>믿음의 여정,<br>아브람과 함께</h2><p>창세기 12장 1–20절 · 성경 퀴즈 20문제</p><button id="startBtn">퀴즈 시작 →</button><small>리모컨 다음 키를 누르면 시작합니다.</small></section><div class="layout" id="quizScreen" hidden><section class="panel"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><span class="tag" id="round"></span><span class="muted" id="count"></span></div><div class="progress"><div id="bar"></div></div><div class="question"><h2 id="question"></h2><div class="participation" id="participation" hidden><strong>전원 참여 · 하나, 둘, 셋에 O/X!</strong><p>가슴 앞에서 팔로 O 또는 X를 준비해 주세요.<br>모르겠으면 찍어도 괜찮아요! 틀려도 계속 함께합니다.</p></div><div class="choices" id="choices"></div></div><div class="controls"><button class="outline" id="prev">← 이전</button><button id="next">다음 →</button></div><div class="controls"><span class="muted">남은 시간</span><span class="timer" id="timer">00:15</span></div></section></div></main><dialog id="revealConfirm" class="reveal-confirm" aria-labelledby="confirmTitle"><h2 id="confirmTitle">정답공개</h2><div class="controls"><button class="outline" id="cancelReveal" autofocus>취소</button><button id="confirmReveal">정답공개</button></div></dialog>
+</head><body><main class="wrap"><header><div class="header-brand"><div class="church-brand"><img class="church-logo" src="./ns_logo.png" alt="기독교대한감리회 남산교회"></div><div><div class="muted">20문항 · 창세기 12장 1–20절</div><h1>📖 창세기 12장 성경 퀴즈</h1></div></div><div><button class="outline" id="fullBtn">⛶ 전체 화면</button> <button class="outline" id="resetBtn">처음부터</button></div></header><section id="startScreen" class="panel start-screen"><span class="tag">남산교회 중고등부</span><h2>믿음의 여정,<br>아브람과 함께</h2><p>창세기 12장 1–20절 · 성경 퀴즈 20문제</p><button id="startBtn">퀴즈 시작 →</button><small>이제 곧 시작합니다.</small></section><div class="layout" id="quizScreen" hidden><section class="panel"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><span class="tag" id="round"></span><span class="muted" id="count"></span></div><div class="progress"><div id="bar"></div></div><div class="question"><h2 id="question"></h2><div class="participation" id="participation" hidden><strong>전원 참여 · 하나, 둘, 셋에 O/X!</strong><p>가슴 앞에서 팔로 O 또는 X를 준비해 주세요.<br>모르겠으면 찍어도 괜찮아요! 틀려도 계속 함께합니다.</p></div><div class="choices" id="choices"></div></div><div class="controls"><button class="outline" id="prev">← 이전</button><button id="next">다음 →</button></div><div class="controls"><span class="muted">남은 시간</span><span class="timer" id="timer">00:15</span></div></section></div></main><dialog id="revealConfirm" class="reveal-confirm" aria-labelledby="confirmTitle"><h2 id="confirmTitle">정답공개</h2><div class="controls"><button class="outline" id="cancelReveal" autofocus>취소</button><button id="confirmReveal">정답공개</button></div></dialog>
 <script>
 const questions=[
   {
